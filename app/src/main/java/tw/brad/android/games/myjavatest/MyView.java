@@ -15,21 +15,21 @@ import android.view.View;
 
 public class MyView extends View {
     private Resources res;
+    private Bitmap ballBmp;
 
     public MyView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        //setBackgroundResource(R.drawable.mybg);
+        setBackgroundResource(R.drawable.mybg);
         res = context.getResources();
+        ballBmp = BitmapFactory.decodeResource(res,R.drawable.ball);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Bitmap bg = BitmapFactory.decodeResource(res,R.drawable.mybg);
+        canvas.drawBitmap(ballBmp, 0, 0, null);
 
-        canvas.drawBitmap(bg, 0, 0, null);
-        
 
     }
 }
