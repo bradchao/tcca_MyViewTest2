@@ -11,6 +11,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.Timer;
+
 /**
  * Created by Administrator on 2017/8/2.
  */
@@ -22,6 +24,7 @@ public class MyView extends View {
     private boolean isInit;
     private float ballW, ballH;
     private Matrix matrix;
+    private Timer timer;
 
     public MyView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -29,13 +32,15 @@ public class MyView extends View {
         res = context.getResources();
         ballBmp = BitmapFactory.decodeResource(res,R.drawable.ball);
         matrix = new Matrix();
+        timer = new Timer();
     }
 
+    public Timer getTimer(){return timer;}
     private void init(){
         isInit = true;
         viewW = getWidth(); viewH = getHeight();
 
-        ballW = viewW / 2f; ballH = ballW;
+        ballW = viewW / 8f; ballH = ballW;
         matrix.reset();
         matrix.postScale(ballW / ballBmp.getWidth(),
                 ballH / ballBmp.getHeight());
