@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -30,6 +32,9 @@ public class MyView extends View {
     private Timer timer;
     private LinkedList<BallTask> balls;
 
+    private GestureDetector gd;
+
+
     public MyView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setBackgroundResource(R.drawable.mybg);
@@ -44,8 +49,43 @@ public class MyView extends View {
 
         balls = new LinkedList<>();
 
+        gd = new GestureDetector(context, new MyGestureListener());
+
 
     }
+
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Log.i("brad", "onDown");
+            return true; //super.onDown(e);
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            //Log.i("brad", "onScroll");
+            return super.onScroll(e1, e2, distanceX, distanceY);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
+            if (Math.abs(vX) > Math.abs(vY)){
+                if (vX > 0){
+                    Log.i("brad", "Right");
+                }else{
+                    Log.i("brad", "Left");
+                }
+            }else{
+                if (vY > 0){
+                    Log.i("brad", "Down");
+                }else{
+                    Log.i("brad", "Up");
+                }
+            }
+            return super.onFling(e1, e2, vX, vY);
+        }
+    }
+
 
     public void setTimer(Timer timer){
         this.timer = timer;
@@ -104,11 +144,14 @@ public class MyView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float ex = event.getX(), ey = event.getY();
-        BallTask ball = new BallTask((int)(Math.random()*4), ex, ey, 16, 16);
-        balls.add(ball);
-        timer.schedule(ball, 0, 30);
-        return false; // super.onTouchEvent(event);
+//        float ex = event.getX(), ey = event.getY();
+//        BallTask ball = new BallTask((int)(Math.random()*4), ex, ey, 16, 16);
+//        balls.add(ball);
+//        timer.schedule(ball, 0, 30);
+//        return false; // super.onTouchEvent(event);
+
+
+        return gd.onTouchEvent(event);
     }
 
     @Override
