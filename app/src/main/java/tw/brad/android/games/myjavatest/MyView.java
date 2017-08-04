@@ -33,11 +33,16 @@ public class MyView extends View {
         res = context.getResources();
         ballBmp = BitmapFactory.decodeResource(res,R.drawable.ball);
         matrix = new Matrix();
-        timer = new Timer();
+        //timer = new Timer();
+        
+    }
+
+    public void setTimer(Timer timer){
+        this.timer = timer;
         timer.schedule(new BallTask(), 1000, 30);
     }
 
-    public Timer getTimer(){return timer;}
+    //public Timer getTimer(){return timer;}
     private void init(){
         isInit = true;
         viewW = getWidth(); viewH = getHeight();

@@ -11,18 +11,21 @@ import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     private MyView myView;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        timer = new Timer();
         myView = (MyView)findViewById(R.id.myView);
+        myView.setTimer(timer);
     }
 
     @Override
     public void finish() {
-        Timer timer = myView.getTimer();
+        //Timer timer = myView.getTimer();
         if (timer!=null){
             timer.cancel();
             timer = null;
