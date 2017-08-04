@@ -8,8 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,11 +28,13 @@ public class MyView extends View {
     private float ballW, ballH;
     private Matrix matrix;
     private Timer timer;
+    private LinkedList<BallTask> balls;
 
     public MyView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setBackgroundResource(R.drawable.mybg);
         res = context.getResources();
+         ballBmp = new Bitmap[ballRes.length];
         for (int i=0; i<ballRes.length; i++) {
             ballBmp[i] = BitmapFactory.decodeResource(res, ballRes[i]);
         }
@@ -38,11 +42,14 @@ public class MyView extends View {
         matrix = new Matrix();
         //timer = new Timer();
 
+        balls = new LinkedList<>();
+
+
     }
 
     public void setTimer(Timer timer){
         this.timer = timer;
-        timer.schedule(new BallTask(), 1000, 30);
+        timer.schedule(new RefreshView(), 0, 30);
     }
 
     //public Timer getTimer(){return timer;}
@@ -61,13 +68,18 @@ public class MyView extends View {
                     matrix, false);
         }
 
-        dx = dy = 16;
+    }
 
+    private class RefreshView extends TimerTask {
+        @Override
+        public void run() {
+            postInvalidate();
+        }
     }
 
     private class BallTask extends TimerTask {
-        private float ballX, ballY, dx, dy;
-        private int intBall;
+        float ballX, ballY, dx, dy;
+        int intBall;
 
         BallTask(int intBall, float ballX, float ballY, float dx, float dy){
             this.intBall = intBall;
@@ -91,11 +103,22 @@ public class MyView extends View {
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float ex = event.getX(), ey = event.getY();
+        BallTask ball = new BallTask((int)(Math.random()*4), ex, ey, 16, 16);
+        balls.add(ball);
+        timer.schedule(ball, 0, 30);
+        return false; // super.onTouchEvent(event);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (!isInit) init();
 
-        canvas.drawBitmap(ballBmp, ballX, ballY, null);
+        for (BallTask ball : balls) {
+            canvas.drawBitmap(ballBmp[ball.intBall], ball.ballX, ball.ballY, null);
+        }
 
 
     }
